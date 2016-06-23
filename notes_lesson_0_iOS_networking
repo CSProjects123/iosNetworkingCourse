@@ -1,3 +1,44 @@
 THESE are my notes from lesson 0 on Udacity's Networking Class:
 
 NSURL - this class lets us represent a URL 
+
+NSURLSession is a class that can manage Network requests on our behalf. You can make modificaions here such as the amount of time you are willing to wait before cancelling a network request. 
+
+NSURLSession.sharedSession() comes preloaded with default settings . It is a singleton. 
+
+IN NSURLSession, all requests are known as tasks. All of these will be a subclass of NSURLSessionTask. 
+There are 3 kinds of tasks. 
+data --> NSURLSessionDataTask --> directly into memory as NSData
+download --> NSURLSessionDownloadTask
+upload --> NSURLSessionUpladTask 
+
+
+We need to "resume" the task explicitly by calling resume.task()
+
+home - command , shift , h 
+
+Use performUiUpdatesOnMain class within the completion handler any time you want to refresh 
+
+
+By default, only https is allwed. Use the info.plist file to change this ( adding App transport security settings  --> allow arbitart loads  = YES )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+							QUESTIONS - go over after the lesson is complete: 
+
+What is happening here at the Network layer - what protocol are we using ? 
+What does the exclamation point do exactly? Need to review 
+What is a closure in swift?
+Go over the jeyword "let" in swift
