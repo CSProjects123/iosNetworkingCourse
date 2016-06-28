@@ -80,6 +80,9 @@ Note- the task in the completion handler after the "in" happens when the data ha
 
 
 
+Note- performUIUpdateOnMain is defined in the GCB blackbox. It is used here to get the image loaded onto the screen so that the image shows up when the app is launched. It does not show up before because the view was being called in the backgroud, was not able to be updated from the main thread. 
+
+
 
 
 
