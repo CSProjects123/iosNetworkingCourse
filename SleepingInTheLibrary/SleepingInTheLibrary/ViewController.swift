@@ -58,21 +58,58 @@ class ViewController: UIViewController {
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
             (data, response, error) in
             
-            if error == nil {
-                
-                if let data = data {
-                    
+            
+            func displayError(error:String) {
+                print(error)
+                print("URL at time of error: \(url)")
+                    performUIUpdatesOnMain{
+                        self.setUIEnabled(true)
+                }
+            }
+            
+            guard (error == nil) else {
+                displayError("There was an error with your request: \(error)")
+                return
+            }
+            
+            
+            // add in a few more successful error checks 
+            
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode>=200 && statusCode<=299 else {
+                displayError("Your request reutned a status code other than 200")
+                return
+            }
+            
+            
+            
+            
+            guard let data = data else {
+                displayError("No data was returned by teh request")
+                return
+            }
+            
+            
                     let parsedResult: AnyObject!
                     
                     do {
                         parsedResult =  try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
                     } catch {
-                        print("Could not parse data as JSON: '\(data)'")
+                        displayError("Could not parse data as JSON: '\(data)'")
                         return
                     }
+            
+            
+            
+            guard let stat = parsedResult[Constants.FlickrResponseKeys.Status] as? String where stat == Constants.FlickrResponseValues.OKStatus else{
+                displayError("Flickr returned an error. See error code and message in \(parsedResult)")
+                return
+                
+            }
                     
-                    if let photosDictionary = parsedResult[Constants.FlickrResponseKeys.Photos] as? [String:AnyObject], photoArray = photosDictionary["photo"] as? [[String:AnyObject]]{
-                        
+                    guard let photosDictionary = parsedResult[Constants.FlickrResponseKeys.Photos] as? [String:AnyObject], photoArray = photosDictionary["photo"] as? [[String:AnyObject]] else {
+                        displayError("cannot find keys '\(Constants.FlickrResponseKeys.Photos)' and '\(Constants.FlickrResponseKeys.Photo)' in \(parsedResult)")
+                        return
+                        }
                         let randomPhotoIndex = Int(arc4random_uniform(UInt32(photoArray.count)))
                         let photoDictionary = photoArray[randomPhotoIndex] as [String:AnyObject]
                         
@@ -88,14 +125,12 @@ class ViewController: UIViewController {
                                 }
                             }
 
-                        }
+                        
                             
                         }
                         
                         
-                    }
-                
-                }
+            
             
         }
         task.resume()

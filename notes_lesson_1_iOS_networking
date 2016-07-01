@@ -1,0 +1,205 @@
+				LESSON 1 NOTES
+
+
+
+
+some arguments will be required. For eg . API key 
+
+Some APIs have API Explorer - good for testing. In the API explorere, a tyest API key is often automatically included. 
+
+Note++ -  The  URLs can oply be sent over the internet usiong the ASCII character set. 
+ 
+In some cases, we may want ot use characters in the URL that are considered unsage ASCII characters - for example,the "+"
+In this case, we have to escape the unsafe characters to valid ascii characters in the URL 
+
++ --> %2B 
+
+
+WEB SERVICE TUTORIALS:
+https://www.raywenderlich.com/2941/how-to-write-a-simple-phpmysql-web-service-for-an-ios-app
+
+http://www.techrepublic.com/blog/software-engineer/create-your-own-web-service-for-an-ios-app-part-one/
+
+
+http://www.techrepublic.com/blog/software-engineer/create-your-own-web-service-for-an-ios-app-part-two/
+
+
+
+
+To USE an API, you typically have to : 
+1. Sign up for an account with the service
+2. Register teh app 
+3. Usually, go through some authentication process
+
+
+
+key:23e85e804149b379f3f42e73ca5e9d3
+secret : 9d1ae9d47b638c6c
+
+
+All constants for the project are in a struct called Constants, which has a collection of structs for differemt types of constants
+
+Since you dont want to ask for a new image while you are waiting for an old image to load, you can disable the UI by using the following line of code: 
+        setUIEnabled(false)
+within the IBAction function 
+
+
+use somehting like 
+	\(Constants.flickrparams.apikey)=\(...) 
+when adding to the query parameters
+
+By using static key word to define the parameters in the Structs, we can refer to them using the "." notation. This means that the variables belong to the entire struct, not just an instance of a struct. We never have ot declare an instance of the structs to use them. 
+
+
+ Whenever you are dealing with a URL, make sure you have ASCII safe characters. IF there is a chance that the characters are ASCII unsafe, you have to pass them through a function that can convert them onto the correct escaped ASCII characters. 
+
+
+ To convert any value into a string: 
+
+    let stringValue = "\(value)"
+
+
+
+Methods that are worth keeping in mind from the method that we just wrote: 
+
+
+
+    private func escapedParameters(parameters: [String:AnyObject]) -> String {
+        if parameters.isEmpty{
+            return""
+        }else {
+            var keyValuePairs = [String]()
+            
+        
+            for (key, value) in parameters {
+                let stringValue = "\(value)"
+                let escapedValue = stringValue.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+                keyValuePairs.append(key + "=" + "\(escapedValue!)")
+            
+            }
+            
+            return "?\(keyValuePairs.joinWithSeparator("&"))"
+            
+        }
+    }
+
+
+--> stringByAddingPercentEncodingWithAllowedCharacters
+--> joinWithSeparator
+
+
+
+One thing to note here is that we are not using the NSURL to make a request. We are using the NSURLRequest object whcih wraps around the NSURL and gives us more flexibnility to choose the parameters that we want. for example get vs post. 
+
+Also note that there is a different class, called NSMutableURLRequest that gives us the option to change parameters, other one does not. 
+
+Note the Syntax we used for the call to get de-serialized JSON:
+
+
+    private func getImageFromFlickr() {
+        
+        let methodParameters = [
+            Constants.FlickrParameterKeys.Method: Constants.FlickrParameterValues.GalleryPhotosMethod,
+            Constants.FlickrParameterKeys.APIKey: Constants.FlickrParameterValues.APIKey,
+            Constants.FlickrParameterKeys.GalleryID: Constants.FlickrParameterValues.GalleryID,
+            Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
+            Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
+            Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback
+        ]
+        
+        let urlString = Constants.Flickr.APIBaseURL + escapedParameters(methodParameters)
+        
+        let url = NSURL(string: urlString)!
+        let request = NSURLRequest(URL: url)
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            (data, response, error) in
+            
+            if error == nil {
+                
+                if let data = data {
+                    
+                    let parsedResult: AnyObject!
+                    
+                    do {
+                        parsedResult =  try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+                    } catch {
+                        print("Could not parse data as JSON: '\(data)'")
+                        return
+                    }
+                    
+                    print(parsedResult)
+                }
+                
+            }
+        }
+        task.resume()
+        
+    }
+
+    Note the if let data = data 
+    Note the do and catch blocks, the catch has to return 
+
+
+
+    NSDictionary — Objective-C’s version of a Dictionary; sometimes we must use it in Swift when working with certain APIs like NSJSONSerialization
+NSArray — Objective-C’s version of an Array; sometimes we must use it in Swift when working with certain APIs like NSJSONSerialization
+
+
+
+For JSON objects 
+{} --> indicative of a dictionary ; i.e. these are just another JSON object but they can be represented in Swift, as dictionaries
+
+[] --> indicative of a array 
+
+
+Important concept in networking in error checking -  use Guard statements. 
+
+If there are many functions, it makes sense to have one function just for displaying the errors. 
+
+it could look somehting like:
+            func displayError(error:String) {
+                print(error)
+                print("URL at time of error: \(url)")
+                    performUIUpdatesOnMain{
+                        self.setUIEnabled(true)
+                }
+            }
+
+
+using the guard statment, you can check if the data exist or not . you no longer need to match on whether  the error returned is nil or not. 
+
+
+            
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode>=200 && statusCode<=299 else {
+                displayError("Your request reutned a status code other than 200")
+                return
+            }
+            
+            
+
+            or something like:
+
+                        guard let data = data else {
+                displayError("No data was returned by teh request")
+                return
+            }
+
+
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
