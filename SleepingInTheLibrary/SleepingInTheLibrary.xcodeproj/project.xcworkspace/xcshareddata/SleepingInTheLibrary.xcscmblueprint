@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "BAE1F7A899474A2C4487507BEBB81EB1B0FF4AC2",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "41D9DEEF7D1D690FA89F6DEA0624935C4625FA98" : 0,
+    "BAE1F7A899474A2C4487507BEBB81EB1B0FF4AC2" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "241DBD57-3950-4C7B-9EB4-395B74497AC7",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "41D9DEEF7D1D690FA89F6DEA0624935C4625FA98" : "",
+    "BAE1F7A899474A2C4487507BEBB81EB1B0FF4AC2" : "ios-nd-networking\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "SleepingInTheLibrary",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "SleepingInTheLibrary\/SleepingInTheLibrary.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CSProjects123",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "41D9DEEF7D1D690FA89F6DEA0624935C4625FA98"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CSProjects123\/iosNetworkingCourse.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "BAE1F7A899474A2C4487507BEBB81EB1B0FF4AC2"
+    }
+  ]
+}

@@ -11,7 +11,7 @@ import UIKit
 // MARK: - ViewController: UIViewController
 
 class ViewController: UIViewController {
-
+    
     // MARK: Outlets
     
     @IBOutlet weak var photoImageView: UIImageView!
@@ -42,6 +42,87 @@ class ViewController: UIViewController {
     
     private func getImageFromFlickr() {
         
-        // TODO: Write the network code here!
+        let methodParameters = [
+            Constants.FlickrParameterKeys.Method: Constants.FlickrParameterValues.GalleryPhotosMethod,
+            Constants.FlickrParameterKeys.APIKey: Constants.FlickrParameterValues.APIKey,
+            Constants.FlickrParameterKeys.GalleryID: Constants.FlickrParameterValues.GalleryID,
+            Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
+            Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
+            Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback
+        ]
+        
+        let urlString = Constants.Flickr.APIBaseURL + escapedParameters(methodParameters)
+        
+        let url = NSURL(string: urlString)!
+        let request = NSURLRequest(URL: url)
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            (data, response, error) in
+            
+            if error == nil {
+                
+                if let data = data {
+                    
+                    let parsedResult: AnyObject!
+                    
+                    do {
+                        parsedResult =  try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+                    } catch {
+                        print("Could not parse data as JSON: '\(data)'")
+                        return
+                    }
+                    
+                    if let photosDictionary = parsedResult[Constants.FlickrResponseKeys.Photos] as? [String:AnyObject], photoArray = photosDictionary["photo"] as? [[String:AnyObject]]{
+                        
+                        let randomPhotoIndex = Int(arc4random_uniform(UInt32(photoArray.count)))
+                        let photoDictionary = photoArray[randomPhotoIndex] as [String:AnyObject]
+                        
+                        if let imageUrlString = photoDictionary[Constants.FlickrResponseKeys.MediumURL] as? String, let photoTitle = photoDictionary[Constants.FlickrResponseKeys.Title] as? String {
+                            print(imageUrlString)
+                        }
+                            
+                        }
+                        
+                        
+                    }
+                
+                }
+            
+        }
+        task.resume()
+        
     }
+    
+    private func escapedParameters(parameters: [String:AnyObject]) -> String {
+        if parameters.isEmpty{
+            return""
+        }else {
+            var keyValuePairs = [String]()
+            
+        
+            for (key, value) in parameters {
+                let stringValue = "\(value)"
+                let escapedValue = stringValue.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+                keyValuePairs.append(key + "=" + "\(escapedValue!)")
+            
+            }
+            
+            return "?\(keyValuePairs.joinWithSeparator("&"))"
+            
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
